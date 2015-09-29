@@ -483,10 +483,6 @@ public abstract class AbstractJClass extends JStructure {
     protected final void printMemberVariables(final JSourceWriter jsw) {
         if (_fields.size() > 0) {
             jsw.writeln();
-            jsw.writeln("  //--------------------------/");
-            jsw.writeln(" //- Class/Member Variables -/");
-            jsw.writeln("//--------------------------/");
-            jsw.writeln();
         }
 
         for (int i = 0; i < _fields.size(); i++) {
@@ -521,6 +517,8 @@ public abstract class AbstractJClass extends JStructure {
 
             jsw.writeln(';');
             jsw.writeln();
+
+            addImport(jField.getType().toString());
         }
     }
 
@@ -550,11 +548,6 @@ public abstract class AbstractJClass extends JStructure {
      */
     protected final void printConstructors(final JSourceWriter jsw) {
         if (_constructors.size() > 0) {
-            jsw.writeln();
-            jsw.writeln("  //----------------/");
-            jsw.writeln(" //- Constructors -/");
-            jsw.writeln("//----------------/");
-            jsw.writeln();
         }
 
         for (int i = 0; i < _constructors.size(); i++) {
@@ -571,11 +564,6 @@ public abstract class AbstractJClass extends JStructure {
      */
     protected final void printMethods(final JSourceWriter jsw) {
         if (_methods.size() > 0) {
-            jsw.writeln();
-            jsw.writeln("  //-----------/");
-            jsw.writeln(" //- Methods -/");
-            jsw.writeln("//-----------/");
-            jsw.writeln();
         }
 
         for (int i = 0; i < _methods.size(); i++) {
@@ -592,12 +580,6 @@ public abstract class AbstractJClass extends JStructure {
      */
     protected final void printInnerClasses(final JSourceWriter jsw) {
         if ((_innerClasses != null) && (_innerClasses.size() > 0)) {
-            jsw.writeln();
-            jsw.writeln("  //-----------------/");
-            jsw.writeln(" //- Inner Classes -/");
-            jsw.writeln("//-----------------/");
-            jsw.writeln();
-
             for (int i = 0; i < _innerClasses.size(); i++) {
                 JClass jClass = (JClass) _innerClasses.elementAt(i);
                 jClass.print(jsw, true);

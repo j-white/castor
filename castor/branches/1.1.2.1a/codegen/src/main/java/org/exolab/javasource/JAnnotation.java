@@ -358,41 +358,45 @@ public final class JAnnotation {
     public void print(final JSourceWriter jsw) {
         jsw.write("@");
         jsw.write(_annotationType.getLocalName());
-        jsw.write("(");
         // Single element annotation?
         String[] elementNames = getElementNames();
-        if (elementNames.length == 1 && elementNames[0].equals(VALUE)) {
-            // Just output value
-            printElementValue(jsw, getElementValueObject(VALUE));
-        } else if (elementNames.length > 0) {
-            // Max element name length?
-            int maxLength = 0;
-            for (int i = 0; i < elementNames.length; i++) {
-                int elementNameLength = elementNames[i].length();
-                if (elementNameLength > maxLength) { maxLength = elementNameLength; }
-            }
-            // Output element name and values
-            jsw.writeln();
-            jsw.indent();
-            for (int i = 0; i < elementNames.length; i++) {
-                int elementNameLength = elementNames[i].length();
-                // Output element name with padding
-                jsw.write(elementNames[i]);
-                for (int p = 0; p < maxLength - elementNameLength; p++) {
-                    jsw.write(" ");
+        if (elementNames.length > 0) {
+            jsw.write("(");
+            if (elementNames.length == 1 && elementNames[0].equals(VALUE)) {
+                // Just output value
+                printElementValue(jsw, getElementValueObject(VALUE));
+            } else if (elementNames.length > 0) {
+                // Max element name length?
+                int maxLength = 0;
+                for (int i = 0; i < elementNames.length; i++) {
+                    int elementNameLength = elementNames[i].length();
+                    if (elementNameLength > maxLength) {
+                        maxLength = elementNameLength;
+                    }
                 }
-                // Assignment operator
-                jsw.write(" = ");
-                // Value
-                printElementValue(jsw, getElementValueObject(elementNames[i]));
-                if (i < elementNames.length - 1) {
-                    jsw.write(",");
-                    jsw.writeln();
+                // Output element name and values
+                jsw.writeln();
+                jsw.indent();
+                for (int i = 0; i < elementNames.length; i++) {
+                    int elementNameLength = elementNames[i].length();
+                    // Output element name with padding
+                    jsw.write(elementNames[i]);
+                    for (int p = 0; p < maxLength - elementNameLength; p++) {
+                        jsw.write(" ");
+                    }
+                    // Assignment operator
+                    jsw.write(" = ");
+                    // Value
+                    printElementValue(jsw, getElementValueObject(elementNames[i]));
+                    if (i < elementNames.length - 1) {
+                        jsw.write(",");
+                        jsw.writeln();
+                    }
                 }
+                jsw.unindent();
             }
-            jsw.unindent();
+            jsw.write(")");
         }
-        jsw.write(")");
     }
 
     /**

@@ -54,6 +54,7 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 import org.exolab.castor.builder.BuilderConfiguration;
 import org.exolab.castor.builder.FactoryState;
@@ -157,17 +158,17 @@ public final class SourceFactory extends BaseFactory {
      */
     public SourceFactory(final BuilderConfiguration config,
             final FieldInfoFactory infoFactory,
-            final GroupNaming groupNaming, 
+            final GroupNaming groupNaming,
             final SourceGenerator sourceGenerator) {
         super(config, infoFactory, groupNaming, sourceGenerator);
 
         // set the config into the info factory (CASTOR-1346)
         infoFactory.setBoundProperties(config.boundPropertiesEnabled());
 
-        this._memberFactory = 
+        this._memberFactory =
             new MemberFactory(config, infoFactory, getGroupNaming(), sourceGenerator);
         this._typeConversion = new TypeConversion(getConfig());
-        this._enumerationFactory = 
+        this._enumerationFactory =
             new EnumerationFactory(getConfig(), getGroupNaming(), sourceGenerator);
     } //-- SourceFactory
 
@@ -307,7 +308,7 @@ public final class SourceFactory extends BaseFactory {
         }
 
         //3-- Create factoryState and chain it to sgState to prevent endless loop
-        FactoryState state = 
+        FactoryState state =
             new FactoryState(className, sgState, packageName, component);
         state.setCreateGroupItem(createGroupItem);
         if (sgState.getCurrentFactoryState() != null) {
@@ -348,11 +349,11 @@ public final class SourceFactory extends BaseFactory {
 
         //-- created from element definition information
         classInfo.setElementDefinition(creatingForAnElement);
-        
+
         // deal with substitution groups
         if (creatingForAnElement) {
             ElementDecl elementDeclaration = (ElementDecl) component.getAnnotated();
-            Enumeration possibleSubstitutes = elementDeclaration.getSubstitutionGroupMembers(); 
+            Enumeration possibleSubstitutes = elementDeclaration.getSubstitutionGroupMembers();
             if (possibleSubstitutes.hasMoreElements()) {
                 List substitutionGroupMembers = new ArrayList();
                 while (possibleSubstitutes.hasMoreElements()) {
@@ -362,8 +363,8 @@ public final class SourceFactory extends BaseFactory {
                 classInfo.setSubstitutionGroups(substitutionGroupMembers);
             }
         }
-                 
-        
+
+
         if (type != null) {
             if (type.isComplexType()) {
                 processComplexType(component, sgState, state);
@@ -513,7 +514,7 @@ public final class SourceFactory extends BaseFactory {
 
     /**
      * Extract 'dcoumentation' annotations from the {@link Annotated} instance given.
-     * @param annotated {@link Annotated} instance to extract annotattions from. 
+     * @param annotated {@link Annotated} instance to extract annotattions from.
      * @param jClass {@link JClass} instance to inject annotations into.
      */
     private void extractAnnotations(final Annotated annotated, final JClass jClass) {
@@ -847,7 +848,7 @@ public final class SourceFactory extends BaseFactory {
         //-- add default constructor
         JConstructor con = jClass.createConstructor();
         jClass.addConstructor(con);
-        con.getSourceCode().add("super();");
+        //con.getSourceCode().add("super();");
     } //-- initialize
 
     /**
@@ -972,85 +973,85 @@ public final class SourceFactory extends BaseFactory {
      * @param isAbstract true if the generated Class should be marked abstract
      */
     private void createMarshalMethods(final JClass parent, final boolean isAbstract) {
-        //-- create main marshal method
-        JMethod jMethod = new JMethod("marshal");
-        jMethod.addException(SGTypes.MARSHAL_EXCEPTION,
-                "if object is null or if any SAXException is thrown during marshaling");
-        jMethod.addException(SGTypes.VALIDATION_EXCEPTION,
-                "if this object is an invalid instance according to the schema");
-        jMethod.addParameter(new JParameter(SGTypes.WRITER, "out"));
-
-        //if (_config.useJava50()) {
-        // jMethod.addAnnotation(new JAnnotation(new JAnnotationType("Override")));
-        //}
-
-        parent.addMethod(jMethod);
-
-        if (isAbstract) {
-            jMethod.getModifiers().setAbstract(true);
-        } else {
-            JSourceCode jsc = jMethod.getSourceCode();
-            jsc.add("Marshaller.marshal(this, out);");
-        }
-
-        //-- create helper marshal method
-        //-- start helper marshal method, this method will
-        //-- be built up as we process the given ElementDecl
-        jMethod = new JMethod("marshal");
-        JClass jc = null;
-        if (_sax1) {
-            jc = new JClass("org.xml.sax.DocumentHandler");
-        } else {
-            jc = new JClass("org.xml.sax.ContentHandler");
-            jMethod.addException(SGTypes.IO_EXCEPTION,
-                    "if an IOException occurs during marshaling");
-        }
-        jMethod.addException(SGTypes.MARSHAL_EXCEPTION,
-                "if object is null or if any SAXException is thrown during marshaling");
-        jMethod.addException(SGTypes.VALIDATION_EXCEPTION,
-                "if this object is an invalid instance according to the schema");
-        jMethod.addParameter(new JParameter(jc, "handler"));
-        parent.addMethod(jMethod);
-
-        if (isAbstract) {
-            jMethod.getModifiers().setAbstract(true);
-        } else {
-            JSourceCode jsc = jMethod.getSourceCode();
-            jsc = jMethod.getSourceCode();
-            jsc.add("Marshaller.marshal(this, handler);");
-        }
-
-        parent.addImport("org.exolab.castor.xml.Marshaller");
-        parent.addImport("org.exolab.castor.xml.Unmarshaller");
+//        //-- create main marshal method
+//        JMethod jMethod = new JMethod("marshal");
+//        jMethod.addException(SGTypes.MARSHAL_EXCEPTION,
+//                "if object is null or if any SAXException is thrown during marshaling");
+//        jMethod.addException(SGTypes.VALIDATION_EXCEPTION,
+//                "if this object is an invalid instance according to the schema");
+//        jMethod.addParameter(new JParameter(SGTypes.WRITER, "out"));
+//
+//        //if (_config.useJava50()) {
+//        // jMethod.addAnnotation(new JAnnotation(new JAnnotationType("Override")));
+//        //}
+//
+//        parent.addMethod(jMethod);
+//
+//        if (isAbstract) {
+//            jMethod.getModifiers().setAbstract(true);
+//        } else {
+//            JSourceCode jsc = jMethod.getSourceCode();
+//            jsc.add("Marshaller.marshal(this, out);");
+//        }
+//
+//        //-- create helper marshal method
+//        //-- start helper marshal method, this method will
+//        //-- be built up as we process the given ElementDecl
+//        jMethod = new JMethod("marshal");
+//        JClass jc = null;
+//        if (_sax1) {
+//            jc = new JClass("org.xml.sax.DocumentHandler");
+//        } else {
+//            jc = new JClass("org.xml.sax.ContentHandler");
+//            jMethod.addException(SGTypes.IO_EXCEPTION,
+//                    "if an IOException occurs during marshaling");
+//        }
+//        jMethod.addException(SGTypes.MARSHAL_EXCEPTION,
+//                "if object is null or if any SAXException is thrown during marshaling");
+//        jMethod.addException(SGTypes.VALIDATION_EXCEPTION,
+//                "if this object is an invalid instance according to the schema");
+//        jMethod.addParameter(new JParameter(jc, "handler"));
+//        parent.addMethod(jMethod);
+//
+//        if (isAbstract) {
+//            jMethod.getModifiers().setAbstract(true);
+//        } else {
+//            JSourceCode jsc = jMethod.getSourceCode();
+//            jsc = jMethod.getSourceCode();
+//            jsc.add("Marshaller.marshal(this, handler);");
+//        }
+//
+//        parent.addImport("org.exolab.castor.xml.Marshaller");
+//        parent.addImport("org.exolab.castor.xml.Unmarshaller");
     } //-- createMarshalMethods
 
     private void createUnmarshalMethods(final JClass parent, final SGStateInfo sgState) {
-        //-- mangle method name to avoid compiler errors when this class is extended
-        String methodName = "unmarshal";
-        if (sgState.getSourceGenerator().mappingSchemaType2Java()) {
-            methodName += parent.getLocalName();
-        }
-
-        //-- create main unmarshal method
-
-        //-- search for proper base class
-        JClass returnType = findBaseClass(parent, sgState);
-        JMethod jMethod = new JMethod(methodName, returnType,
-                                      "the unmarshaled " + returnType);
-        jMethod.getModifiers().setStatic(true);
-        jMethod.addException(SGTypes.MARSHAL_EXCEPTION,
-                "if object is null or if any SAXException is thrown during marshaling");
-        jMethod.addException(SGTypes.VALIDATION_EXCEPTION,
-                "if this object is an invalid instance according to the schema");
-        jMethod.addParameter(new JParameter(SGTypes.READER, "reader"));
-        parent.addMethod(jMethod);
-
-        JSourceCode jsc = jMethod.getSourceCode();
-        jsc.add("return (");
-        jsc.append(returnType.getName());
-        jsc.append(") Unmarshaller.unmarshal(");
-        jsc.append(parent.getName());
-        jsc.append(".class, reader);");
+//        //-- mangle method name to avoid compiler errors when this class is extended
+//        String methodName = "unmarshal";
+//        if (sgState.getSourceGenerator().mappingSchemaType2Java()) {
+//            methodName += parent.getLocalName();
+//        }
+//
+//        //-- create main unmarshal method
+//
+//        //-- search for proper base class
+//        JClass returnType = findBaseClass(parent, sgState);
+//        JMethod jMethod = new JMethod(methodName, returnType,
+//                                      "the unmarshaled " + returnType);
+//        jMethod.getModifiers().setStatic(true);
+//        jMethod.addException(SGTypes.MARSHAL_EXCEPTION,
+//                "if object is null or if any SAXException is thrown during marshaling");
+//        jMethod.addException(SGTypes.VALIDATION_EXCEPTION,
+//                "if this object is an invalid instance according to the schema");
+//        jMethod.addParameter(new JParameter(SGTypes.READER, "reader"));
+//        parent.addMethod(jMethod);
+//
+//        JSourceCode jsc = jMethod.getSourceCode();
+//        jsc.add("return (");
+//        jsc.append(returnType.getName());
+//        jsc.append(") Unmarshaller.unmarshal(");
+//        jsc.append(parent.getName());
+//        jsc.append(".class, reader);");
     } //-- createUnmarshalMethods
 
     /**
@@ -1125,58 +1126,68 @@ public final class SourceFactory extends BaseFactory {
             throw new IllegalArgumentException("JClass must not be null");
         }
 
-        // The argument is not null
-        JField[] fields = jclass.getFields();
-
         // Creates the method signature
         JMethod jMethod = new JMethod("hashCode", JType.INT, "a hash code value for the object.");
-        jMethod.setComment("Overrides the java.lang.Object.hashCode method.\n"
-                           + "<p>\n"
-                           + "The following steps came from "
-                           + "<b>Effective Java Programming Language Guide</b> "
-                           + "by Joshua Bloch, Chapter 3");
+//        jMethod.setComment("Overrides the java.lang.Object.hashCode method.\n"
+//                + "<p>\n"
+//                + "The following steps came from "
+//                + "<b>Effective Java Programming Language Guide</b> "
+//                + "by Joshua Bloch, Chapter 3");
 
         // The hashCode method has no arguments
         jclass.addMethod(jMethod);
-
         JSourceCode jsc = jMethod.getSourceCode();
+//
+        JField[] fields = jclass.getFields();
+//        jsc.add("int result = 17;");
+//        jsc.add("");
+//        jsc.add("long tmp;");
 
-        jsc.add("int result = 17;");
-        jsc.add("");
-        jsc.add("long tmp;");
-
-        for (int i = 0; i < fields.length; i++) {
-            JField temp = fields[i];
-            // If the field is an object the hashCode method is called recursively
-
-            JType type = temp.getType();
-            String name = temp.getName();
-            if (type.isPrimitive()) {
-                if (type == JType.BOOLEAN) {
-                    // Skip the _has_* variables only if they represent
-                    // a primitive that may or may not be present
-                    if (!name.startsWith("_has_") || jclass.getField(name.substring(5)) != null) {
-                        jsc.add("result = 37 * result + (" + name + "?0:1);");
-                    }
-                } else if (type == JType.BYTE || type == JType.INT || type == JType.SHORT) {
-                    jsc.add("result = 37 * result + " + name + ";");
-                } else if (type == JType.LONG) {
-                    jsc.add("result = 37 * result + (int)(" + name + "^(" + name + ">>>32));");
-                } else if (type == JType.FLOAT) {
-                    jsc.add("result = 37 * result + java.lang.Float.floatToIntBits(" + name + ");");
-                } else if (type == JType.DOUBLE) {
-                    jsc.add("tmp = java.lang.Double.doubleToLongBits(" + name + ");");
-                    jsc.add("result = 37 * result + (int)(tmp^(tmp>>>32));");
-                }
-            } else {
-                // Calculates hashCode in a recursive manner.
-                jsc.add("if (" + name + " != null) {");
-                jsc.add("   result = 37 * result + " + name + ".hashCode();");
-                jsc.add("}");
-            }
+        if (fields.length == 0) {
+            jsc.add("return 1;");
         }
-        jsc.add("");
-        jsc.add("return result;");
+
+        if (fields.length > 0) {
+            jclass.addImport("java.util.Objects");
+            jsc.add("int hash = Objects.hash(");
+            jsc.indent();
+            for (int i = 0; i < fields.length; i++) {
+                JField temp = fields[i];
+                String name = temp.getName();
+
+                jsc.add(name);
+                if (fields.length > 1 && i < fields.length-1) {
+                    jsc.append(", ");
+                }
+
+//            if (type.isPrimitive()) {
+//                if (type == JType.BOOLEAN) {
+//                    // Skip the _has_* variables only if they represent
+//                    // a primitive that may or may not be present
+//                    if (!name.startsWith("_has_") || jclass.getField(name.substring(5)) != null) {
+//                        jsc.add("result = 37 * result + (" + name + "?0:1);");
+//                    }
+//                } else if (type == JType.BYTE || type == JType.INT || type == JType.SHORT) {
+//                    jsc.add("result = 37 * result + " + name + ";");
+//                } else if (type == JType.LONG) {
+//                    jsc.add("result = 37 * result + (int)(" + name + "^(" + name + ">>>32));");
+//                } else if (type == JType.FLOAT) {
+//                    jsc.add("result = 37 * result + java.lang.Float.floatToIntBits(" + name + ");");
+//                } else if (type == JType.DOUBLE) {
+//                    jsc.add("tmp = java.lang.Double.doubleToLongBits(" + name + ");");
+//                    jsc.add("result = 37 * result + (int)(tmp^(tmp>>>32));");
+//                }
+//            } else {
+//                // Calculates hashCode in a recursive manner.
+//                jsc.add("if (" + name + " != null) {");
+//                jsc.add("   result = 37 * result + " + name + ".hashCode();");
+//                jsc.add("}");
+//            }
+            }
+            jsc.append(");");
+            jsc.unindent();
+            jsc.add("return hash;");
+        }
     }   //createHashCodeMethod
 
     /**
@@ -1200,89 +1211,61 @@ public final class SourceFactory extends BaseFactory {
 
         jclass.addMethod(jMethod);
         JSourceCode jsc = jMethod.getSourceCode();
-        jsc.add("if ( this == obj )");
+        jsc.add("if ( this == obj ) {");
         jsc.indent();
         jsc.add("return true;");
         jsc.unindent();
+        jsc.add("}");
         if (jclass.getSuperClassQualifiedName() != null) {
             jsc.add("");
-            jsc.add("if (super.equals(obj)==false)");
+            jsc.add("if (super.equals(obj)==false) {");
             jsc.indent();
             jsc.add("return false;");
             jsc.unindent();
+            jsc.add("}");
         }
-        jsc.add("");
-        jsc.add("if (obj instanceof ");
-        jsc.append(jclass.getLocalName());
-        jsc.append(") {");
-        jsc.add("");
         if (fields.length > 0) {
+            jclass.addImport("java.util.Objects");
+
+            jsc.add("");
+            jsc.add("if (obj instanceof ");
+            jsc.append(jclass.getLocalName());
+            jsc.append(") {");
             jsc.indent();
+
             jsc.add(jclass.getLocalName());
             jsc.append(" temp = (");
             jsc.append(jclass.getLocalName());
             jsc.append(")obj;");
-        }
-        for (int i = 0; i < fields.length; i++) {
-            JField temp = fields[i];
-            //Be careful to arrayList....
 
-            String name = temp.getName();
-            if (temp.getType().isPrimitive()) {
-                jsc.add("if (this.");
+            jsc.add("boolean equals = ");
+            for (int i = 0; i < fields.length; i++) {
+                JField temp = fields[i];
+                String name = temp.getName();
+
+                if (i == 1) jsc.indent();
+                if (i > 0) jsc.add("&& ");
+
+                jsc.append("Objects.equals(");
+                jsc.append("temp.");
                 jsc.append(name);
-                jsc.append(" != temp.");
+                jsc.append(", ");
                 jsc.append(name);
                 jsc.append(")");
-            } else {
-                //-- Check first if the field is not null. This can occur while comparing
-                //-- two objects that contains non-mandatory fields.  We only have to check
-                //-- one field since x.equals(null) should return false when equals() is
-                //-- correctly implemented.
-                jsc.add("if (this.");
-                jsc.append(name);
-                jsc.append(" != null) {");
-                jsc.indent();
-                jsc.add("if (temp.");
-                jsc.append(name);
-                jsc.append(" == null) ");
-                jsc.indent();
-                jsc.append("return false;");
-                jsc.unindent();
-                jsc.add("else if (!(");
 
-                // Special handling for comparing arrays
-                if (temp.getType().isArray()) {
-                    jsc.append("java.util.Arrays.equals(this.");
-                    jsc.append(name);
-                    jsc.append(", temp.");
-                    jsc.append(name);
-                    jsc.append(")");
-                } else {
-                    jsc.append("this.");
-                    jsc.append(name);
-                    jsc.append(".equals(temp.");
-                    jsc.append(name);
-                    jsc.append(")");
+
+                if (i == fields.length -1) {
+                    jsc.append(";");
                 }
 
-                jsc.append(")) ");
-                jsc.indent();
-                jsc.add("return false;");
-                jsc.unindent();
-                jsc.unindent();
-                jsc.add("}"); //end of != null
-                jsc.add("else if (temp.");
-                jsc.append(name);
-                jsc.append(" != null)");
+                if (i >= 1 && i == fields.length - 1) {
+                    jsc.unindent();
+                }
             }
-            jsc.indent();
-            jsc.add("return false;");
+            jsc.add("return equals;");
             jsc.unindent();
+            jsc.add("}");
         }
-        jsc.add("return true;");
-        jsc.unindent();
-        jsc.add("}");
         jsc.add("return false;");
      } //CreateEqualsMethod
 
@@ -1470,35 +1453,35 @@ public final class SourceFactory extends BaseFactory {
      * @param jClass the JClass to create the Validate methods for
      */
     private void createValidateMethods(final JClass jClass) {
-        JMethod     jMethod = null;
-        JSourceCode jsc     = null;
-
-        //-- #validate
-        jMethod = new JMethod("validate");
-        jMethod.addException(SGTypes.VALIDATION_EXCEPTION,
-                             "if this object is an invalid instance according to the schema");
-
-        jClass.addMethod(jMethod);
-        jsc = jMethod.getSourceCode();
-        jsc.add("org.exolab.castor.xml.Validator validator = new ");
-        jsc.append("org.exolab.castor.xml.Validator();");
-        jsc.add("validator.validate(this);");
-
-        //-- #isValid
-        jMethod  = new JMethod("isValid", JType.BOOLEAN,
-                               "true if this object is valid according to the schema");
-        jsc = jMethod.getSourceCode();
-        jsc.add("try {");
-        jsc.indent();
-        jsc.add("validate();");
-        jsc.unindent();
-        jsc.add("} catch (org.exolab.castor.xml.ValidationException vex) {");
-        jsc.indent();
-        jsc.add("return false;");
-        jsc.unindent();
-        jsc.add("}");
-        jsc.add("return true;");
-        jClass.addMethod(jMethod);
+//        JMethod     jMethod = null;
+//        JSourceCode jsc     = null;
+//
+//        //-- #validate
+//        jMethod = new JMethod("validate");
+//        jMethod.addException(SGTypes.VALIDATION_EXCEPTION,
+//                             "if this object is an invalid instance according to the schema");
+//
+//        jClass.addMethod(jMethod);
+//        jsc = jMethod.getSourceCode();
+//        jsc.add("org.exolab.castor.xml.Validator validator = new ");
+//        jsc.append("org.exolab.castor.xml.Validator();");
+//        jsc.add("validator.validate(this);");
+//
+//        //-- #isValid
+//        jMethod  = new JMethod("isValid", JType.BOOLEAN,
+//                               "true if this object is valid according to the schema");
+//        jsc = jMethod.getSourceCode();
+//        jsc.add("try {");
+//        jsc.indent();
+//        jsc.add("validate();");
+//        jsc.unindent();
+//        jsc.add("} catch (org.exolab.castor.xml.ValidationException vex) {");
+//        jsc.indent();
+//        jsc.add("return false;");
+//        jsc.unindent();
+//        jsc.add("}");
+//        jsc.add("return true;");
+//        jClass.addMethod(jMethod);
     } //-- createValidateMethods
 
     //-------------------/

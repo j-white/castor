@@ -238,9 +238,9 @@ public final class MemberFactory extends BaseFactory {
             final ClassInfoResolver resolver, final boolean useJava50) {
         String xmlName = component.getXMLName();
         String memberName = component.getJavaMemberName();
-        if (!memberName.startsWith("_")) {
-            memberName = "_" + memberName;
-        }
+        //if (!memberName.startsWith("_")) {
+        //    memberName = "_" + memberName;
+        //}
 
         XMLType xmlType = component.getXMLType();
 

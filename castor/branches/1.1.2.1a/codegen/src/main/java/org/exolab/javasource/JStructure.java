@@ -223,7 +223,7 @@ public abstract class JStructure extends JType implements JAnnotatedElement {
         String pkgName = JNaming.getPackageFromClassName(className);
 
         if (pkgName != null) {
-            if (pkgName.equals(_packageName) || pkgName.equals("java.lang")) {
+            if (pkgName.equals(_packageName)) {
                 return;
             }
 
@@ -515,10 +515,6 @@ public abstract class JStructure extends JType implements JAnnotatedElement {
         //-- write class header
         if (_header != null) {
             _header.print(jsw);
-        } else {
-            jsw.writeln("/*");
-            jsw.writeln(" * " + DEFAULT_HEADER);
-            jsw.writeln(" */");
         }
         jsw.writeln();
         jsw.flush();
@@ -557,9 +553,6 @@ public abstract class JStructure extends JType implements JAnnotatedElement {
 
         //-- print imports
         if (_imports.size() > 0) {
-            jsw.writeln("  //---------------------------------/");
-            jsw.writeln(" //- Imported classes and packages -/");
-            jsw.writeln("//---------------------------------/");
             jsw.writeln();
             Enumeration enumeration = _imports.elements();
             while (enumeration.hasMoreElements()) {
@@ -577,7 +570,7 @@ public abstract class JStructure extends JType implements JAnnotatedElement {
      * <br/>
      * Returns the String representation of this JType.
      */
-    public final String toString() {
+    public String toString() {
         return getName();
     }
 

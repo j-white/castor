@@ -230,7 +230,9 @@ public class JClass extends AbstractJClass {
 
             Enumeration enumeration = getInterfaces();
             while (enumeration.hasMoreElements()) {
-                buffer.append(enumeration.nextElement());
+                String nextElement = (String) enumeration.nextElement();
+                buffer.append(nextElement);
+                addImport(nextElement);
                 if (enumeration.hasMoreElements()) { buffer.append(", "); }
             }
             if (endl) {
