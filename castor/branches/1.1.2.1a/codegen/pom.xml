@@ -60,6 +60,10 @@ http://maven.apache.org/maven-v4_0_0.xsd">
 						<include implementation="java.lang.String">org/exolab/castor/builder/**</include>
 						<include implementation="java.lang.String">org/exolab/javasource/**</include>
 					</includes>
+					<excludes>
+						<exclude>**/*.cdr</exclude>
+                        <exclude>**/package.html</exclude>
+					</excludes>
 				</configuration>
 			</plugin>
 

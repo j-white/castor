@@ -607,7 +607,7 @@ public class ConcurrentHashMap extends AbstractMap
      *                if the key is <code>null</code>.
      */
     public Object remove(Object key) {
-        return remove(key, null);
+        return removeInternal(key, null);
     }
 
     /**
@@ -626,7 +626,7 @@ public class ConcurrentHashMap extends AbstractMap
      *                if the key is <code>null</code>.
      */
 
-    protected Object remove(Object key, Object value) {
+    protected Object removeInternal(Object key, Object value) {
         /*
          * Find the entry, then 1. Set value field to null, to force get() to
          * retry 2. Rebuild the list without this entry. All entries following
@@ -902,7 +902,7 @@ public class ConcurrentHashMap extends AbstractMap
         public boolean remove(Object o) {
             if( !(o instanceof Map.Entry)) return false;
             Map.Entry e = (Map.Entry)o;
-            return ConcurrentHashMap.this.remove(e.getKey(), e.getValue()) != null;
+            return ConcurrentHashMap.this.removeInternal(e.getKey(), e.getValue()) != null;
         }
 
         public int size() {
