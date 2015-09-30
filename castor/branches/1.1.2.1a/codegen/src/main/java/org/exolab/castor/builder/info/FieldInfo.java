@@ -172,17 +172,26 @@ public class FieldInfo extends XMLInfo {
             field.setDateTime(true);
         }
 
-        // TODO MVR this is not working, should consider <element> or <attribute> ....
-        if (field.getType().isPrimitive()) {
-            JAnnotation xmlAttributeAnnotation = new JAnnotation(new JAnnotationType("javax.xml.bind.annotation.XmlAttribute"));
-            xmlAttributeAnnotation.setElementValue("name", "\"" + getNodeName() + "\"");
-            field.addAnnotation(xmlAttributeAnnotation);
-            jClass.addImport("javax.xml.bind.annotation.XmlAttribute");
-        } else {
-            JAnnotation xmlAttributeAnnotation = new JAnnotation(new JAnnotationType("javax.xml.bind.annotation.XmlElement"));
-            xmlAttributeAnnotation.setElementValue("name", "\"" + getNodeName() + "\"");
-            field.addAnnotation(xmlAttributeAnnotation);
-            jClass.addImport("javax.xml.bind.annotation.XmlElement");
+        switch (getNodeType()) {
+            case XMLInfo.ATTRIBUTE_TYPE:
+                JAnnotation xmlAttributeAnnotation = new JAnnotation(new JAnnotationType("javax.xml.bind.annotation.XmlAttribute"));
+                xmlAttributeAnnotation.setElementValue("name", "\"" + getNodeName() + "\"");
+                field.addAnnotation(xmlAttributeAnnotation);
+                jClass.addImport("javax.xml.bind.annotation.XmlAttribute");
+                break;
+            case XMLInfo.ELEMENT_TYPE:
+                xmlAttributeAnnotation = new JAnnotation(new JAnnotationType("javax.xml.bind.annotation.XmlElement"));
+                xmlAttributeAnnotation.setElementValue("name", "\"" + getNodeName() + "\"");
+                field.addAnnotation(xmlAttributeAnnotation);
+                jClass.addImport("javax.xml.bind.annotation.XmlElement");
+                break;
+            case XMLInfo.TEXT_TYPE:
+                xmlAttributeAnnotation = new JAnnotation(new JAnnotationType("javax.xml.bind.annotation.XmlValue"));
+                field.addAnnotation(xmlAttributeAnnotation);
+                jClass.addImport("javax.xml.bind.annotation.XmlValue");
+                break;
+            default:
+                throw new RuntimeException("Unsupported node type " + getNodeType());
         }
 
         if (_static || _final) {
