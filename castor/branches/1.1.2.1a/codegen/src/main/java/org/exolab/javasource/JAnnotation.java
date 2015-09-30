@@ -375,25 +375,25 @@ public final class JAnnotation {
                     }
                 }
                 // Output element name and values
-                jsw.writeln();
-                jsw.indent();
+                //jsw.writeln();
+                //jsw.indent();
                 for (int i = 0; i < elementNames.length; i++) {
                     int elementNameLength = elementNames[i].length();
                     // Output element name with padding
                     jsw.write(elementNames[i]);
-                    for (int p = 0; p < maxLength - elementNameLength; p++) {
-                        jsw.write(" ");
-                    }
+//                    for (int p = 0; p < maxLength - elementNameLength; p++) {
+//                        jsw.write(" ");
+//                    }
                     // Assignment operator
                     jsw.write(" = ");
                     // Value
                     printElementValue(jsw, getElementValueObject(elementNames[i]));
                     if (i < elementNames.length - 1) {
-                        jsw.write(",");
-                        jsw.writeln();
+                        jsw.write(", ");
+                        // jsw.writeln();
                     }
                 }
-                jsw.unindent();
+                //jsw.unindent();
             }
             jsw.write(")");
         }

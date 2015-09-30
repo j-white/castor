@@ -583,7 +583,7 @@ public final class MemberFactory extends BaseFactory {
                 }
             } else {
                 // FIXME This works only if a constructor with String as parameter exists
-                value = "new " + xsType.getJType().getName() + "(\"" + value + "\")";
+                value = xsType.getJType().getName() + ".valueOf(\"" + value + "\")";
             }
         }
 
