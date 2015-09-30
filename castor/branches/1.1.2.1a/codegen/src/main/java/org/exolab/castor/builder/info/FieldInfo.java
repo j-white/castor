@@ -340,7 +340,20 @@ public class FieldInfo extends XMLInfo {
         createGetterComment(method.getJDocComment());
         jsc = method.getSourceCode();
         jsc.add("return this.");
-        jsc.append(this._name);
+        if (xsType.isPrimitive()) {
+          String init = getDefaultValue();
+          if (init != null) {
+              jsc.append(this._name);
+              jsc.append(" != null ? this.");
+              jsc.append(this._name);
+              jsc.append(" : ");
+              jsc.append(init);
+          } else {
+              jsc.append(this._name);
+          }
+        } else {
+            jsc.append(this._name);
+        }
         jsc.append(";");
 
         if (xsType.getType() == XSType.BOOLEAN_TYPE) {
@@ -355,9 +368,21 @@ public class FieldInfo extends XMLInfo {
             createGetterComment(method.getJDocComment());
             jsc = method.getSourceCode();
             jsc.add("return this.");
-            jsc.append(this._name);
+            if (xsType.isPrimitive()) {
+              String init = getDefaultValue();
+              if (init != null) {
+                  jsc.append(this._name);
+                  jsc.append(" != null ? this.");
+                  jsc.append(this._name);
+                  jsc.append(" : ");
+                  jsc.append(init);
+              } else {
+                  jsc.append(this._name);
+              }
+            } else {
+                jsc.append(this._name);
+            }
             jsc.append(";");
-
         }
 
     } //-- createGetterMethod

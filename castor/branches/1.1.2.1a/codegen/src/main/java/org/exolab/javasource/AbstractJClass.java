@@ -509,10 +509,12 @@ public abstract class AbstractJClass extends JStructure {
             jsw.write(' ');
             jsw.write(jField.getName());
 
-            String init = jField.getInitString();
-            if (init != null && !jField.isDateTime()) {
-                jsw.write(" = ");
-                jsw.write(init);
+            if (jField.getModifiers().isFinal()) {
+              String init = jField.getInitString();
+              if (init != null && !jField.isDateTime()) {
+                  jsw.write(" = ");
+                  jsw.write(init);
+              }
             }
 
             jsw.writeln(';');
