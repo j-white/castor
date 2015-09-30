@@ -409,18 +409,19 @@ public class FieldInfo extends XMLInfo {
                              "true if at least one " + mname + " has been added");
         jClass.addMethod(method);
         jsc = method.getSourceCode();
-        jsc.add("return this._has");
+        jsc.add("return this.");
         String fieldName = getName();
         jsc.append(fieldName);
+        jsc.append(" != null");
         jsc.append(";");
 
         //-- create delete method
         method = new JMethod(METHOD_PREFIX_DELETE + mname);
         jClass.addMethod(method);
         jsc = method.getSourceCode();
-        jsc.add("this._has");
+        jsc.add("this.");
         jsc.append(fieldName);
-        jsc.append("= false;");
+        jsc.append("= null;");
         //-- bound properties
         if (_bound) {
             //notify listeners
@@ -553,13 +554,6 @@ public class FieldInfo extends XMLInfo {
             }
             
             jsc.append(";");
-        }
-
-        //-- hasProperty
-        if (isHasAndDeleteMethods()) {
-            jsc.add("this._has");
-            jsc.append(fieldName);
-            jsc.append(" = true;");
         }
 
         //-- bound properties
@@ -753,7 +747,7 @@ public class FieldInfo extends XMLInfo {
     public final boolean isHasAndDeleteMethods() {
         XSType xsType = getSchemaType();
         JType jType  = xsType.getJType();
-        return ((!xsType.isEnumerated()) && jType.isPrimitive());
+        return ((!xsType.isEnumerated()) && xsType.isPrimitive());
     } //-- isHasMethod
 
     /**
