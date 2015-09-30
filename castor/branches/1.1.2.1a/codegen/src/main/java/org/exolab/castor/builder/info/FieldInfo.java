@@ -176,17 +176,26 @@ public class FieldInfo extends XMLInfo {
             case XMLInfo.ATTRIBUTE_TYPE:
                 JAnnotation xmlAttributeAnnotation = new JAnnotation(new JAnnotationType("javax.xml.bind.annotation.XmlAttribute"));
                 xmlAttributeAnnotation.setElementValue("name", "\"" + getNodeName() + "\"");
+                if (isRequired()) {
+                    xmlAttributeAnnotation.setElementValue("required", "true");
+                }
                 field.addAnnotation(xmlAttributeAnnotation);
                 jClass.addImport("javax.xml.bind.annotation.XmlAttribute");
                 break;
             case XMLInfo.ELEMENT_TYPE:
                 xmlAttributeAnnotation = new JAnnotation(new JAnnotationType("javax.xml.bind.annotation.XmlElement"));
                 xmlAttributeAnnotation.setElementValue("name", "\"" + getNodeName() + "\"");
+                if (isRequired()) {
+                    xmlAttributeAnnotation.setElementValue("required", "true");
+                }
                 field.addAnnotation(xmlAttributeAnnotation);
                 jClass.addImport("javax.xml.bind.annotation.XmlElement");
                 break;
             case XMLInfo.TEXT_TYPE:
                 xmlAttributeAnnotation = new JAnnotation(new JAnnotationType("javax.xml.bind.annotation.XmlValue"));
+                if (isRequired()) {
+                    xmlAttributeAnnotation.setElementValue("required", "true");
+                }
                 field.addAnnotation(xmlAttributeAnnotation);
                 jClass.addImport("javax.xml.bind.annotation.XmlValue");
                 break;
