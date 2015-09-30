@@ -78,11 +78,39 @@ public final class SingleClassGenerator {
     /**
      * The default code header. Please leave "$" and "Id" separated with "+" so
      * that the CVS server does not expand it here. */
-    private static final String DEFAULT_HEADER = "This class was automatically generated with \n"
+    private static final String ORIGINAL_HEADER = "This class was automatically generated with \n"
                                                  + "<a href=\"" + SourceGenerator.APP_URI + "\">"
                                                  + SourceGenerator.APP_NAME + " "
                                                  + SourceGenerator.VERSION
                                                  + "</a>, using an XML Schema.\n$" + "Id" + "$";
+
+    private static final String OPENNMS_HEADER = "This file is part of OpenNMS(R).\n"
+            + "\n"
+            + "Copyright (C) 2013-2015 The OpenNMS Group, Inc.\n"
+            + "\n"
+            + "OpenNMS(R) is a registered trademark of The OpenNMS Group, Inc.\n"
+            + "\n"
+            + "OpenNMS(R) is free software: you can redistribute it and/or modify\n"
+            + "it under the terms of the GNU Affero General Public License as published\n"
+    + "by the Free Software Foundation, either version 3 of the License,\n"
+    + "or (at your option) any later version.\n"
+    + "\n"
+    + "OpenNMS(R) is distributed in the hope that it will be useful,\n"
+    + "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+    + "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+    + "GNU Affero General Public License for more details.\n"
+    + "\n"
+    + "You should have received a copy of the GNU Affero General Public License\n"
+    + "along with OpenNMS(R).  If not, see:\n"
+    + "    http://www.gnu.org/licenses/\n"
+    + "\n"
+    + "For more information contact:\n"
+    + "    OpenNMS(R) Licensing <license@opennms.org>\n"
+    + "    http://www.opennms.org/\n"
+    + "    http://www.opennms.com/\n"
+    + "\n";
+
+    private static final String DEFAULT_HEADER = OPENNMS_HEADER;
 
     /** Name of the CDR (Class Descriptor Resolver) file. */
     private static final String CDR_FILE = ".castor.cdr";

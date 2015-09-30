@@ -86,7 +86,7 @@ public final class JComment {
     private StringBuffer _comment = null;
 
     /** The maximum number of characters per line. */
-    protected static final int MAX_LENGTH = 65;
+    protected static final int MAX_LENGTH = 80;
 
     /** The maximum number of characters to indent comments. */
     protected static final int MAX_INDENT = 17;
