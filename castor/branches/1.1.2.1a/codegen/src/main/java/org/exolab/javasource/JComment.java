@@ -70,6 +70,9 @@ public final class JComment {
     private static final String START_BLOCK     = "/*";
     private static final String END_BLOCK       = " */";
 
+    private static final String HEADER_START_BLOCK     = "/*******************************************************************************";
+    private static final String HEADER_END_BLOCK       = " *******************************************************************************/";
+
     private static final String START_JAVADOC   = "/**";
     private static final String END_JAVADOC     = " */";
 
@@ -187,8 +190,8 @@ public final class JComment {
                 prefix = SPACE_PREFIX;
                 break;
             case HEADER_STYLE:
-                start = START_BLOCK;
-                end   = END_BLOCK;
+                start = HEADER_START_BLOCK;
+                end   = HEADER_END_BLOCK;
                 prefix = ASTERIX_PREFIX;
                 break;
             case JAVADOC_STYLE:
