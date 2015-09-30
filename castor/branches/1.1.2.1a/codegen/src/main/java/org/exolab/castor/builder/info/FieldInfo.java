@@ -54,6 +54,8 @@ import java.util.List;
 
 import org.exolab.castor.builder.types.XSType;
 import org.exolab.castor.xml.JavaNaming;
+import org.exolab.javasource.JAnnotation;
+import org.exolab.javasource.JAnnotationType;
 import org.exolab.javasource.JClass;
 import org.exolab.javasource.JDocComment;
 import org.exolab.javasource.JDocDescriptor;
@@ -168,6 +170,19 @@ public class FieldInfo extends XMLInfo {
 
         if (getSchemaType().isDateTime()) {
             field.setDateTime(true);
+        }
+
+        // TODO MVR this is not working, should consider <element> or <attribute> ....
+        if (field.getType().isPrimitive()) {
+            JAnnotation xmlAttributeAnnotation = new JAnnotation(new JAnnotationType("javax.xml.bind.annotation.XmlAttribute"));
+            xmlAttributeAnnotation.setElementValue("name", "\"" + getNodeName() + "\"");
+            field.addAnnotation(xmlAttributeAnnotation);
+            jClass.addImport("javax.xml.bind.annotation.XmlAttribute");
+        } else {
+            JAnnotation xmlAttributeAnnotation = new JAnnotation(new JAnnotationType("javax.xml.bind.annotation.XmlElement"));
+            xmlAttributeAnnotation.setElementValue("name", "\"" + getNodeName() + "\"");
+            field.addAnnotation(xmlAttributeAnnotation);
+            jClass.addImport("javax.xml.bind.annotation.XmlElement");
         }
 
         if (_static || _final) {

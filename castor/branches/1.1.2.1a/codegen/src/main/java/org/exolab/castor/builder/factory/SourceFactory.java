@@ -54,7 +54,6 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 
 import org.exolab.castor.builder.BuilderConfiguration;
 import org.exolab.castor.builder.FactoryState;
@@ -333,7 +332,7 @@ public final class SourceFactory extends BaseFactory {
         //4-- intialization of the JClass
         ClassInfo classInfo = state.getClassInfo();
         JClass    jClass    = state.getJClass();
-        initialize(jClass);
+        initialize(jClass, component);
 
         //-- name information
         classInfo.setNodeName(component.getXMLName());
@@ -419,7 +418,7 @@ public final class SourceFactory extends BaseFactory {
             state = new FactoryState(newClassName, sgState, packageName, component);
             classInfo = state.getClassInfo();
             jClass    = state.getJClass();
-            initialize(jClass);
+            initialize(jClass, component);
             if (type != null && type.isComplexType()) {
                 ComplexType complexType = (ComplexType) type;
                 if (complexType.isTopLevel() ^ creatingForAnElement) {
@@ -798,7 +797,7 @@ public final class SourceFactory extends BaseFactory {
         ClassInfo classInfo = state.getClassInfo();
         JClass    jClass    = state.getJClass();
 
-        initialize(jClass);
+        initialize(jClass, comp);
 
         //-- XML information
         Schema  schema = simpleType.getSchema();
@@ -836,8 +835,17 @@ public final class SourceFactory extends BaseFactory {
      * Initializes the given JClass.
      * @param jClass the JClass to initialize
      */
-    private void initialize(final JClass jClass) {
+    private void initialize(final JClass jClass, XMLBindingComponent comp) {
         jClass.addInterface("java.io.Serializable");
+
+        JAnnotation xmlRootElementAnnotation = new JAnnotation( new JAnnotationType("javax.xml.bind.annotation.XmlRootElement"));
+        xmlRootElementAnnotation.setElementValue("name", "\"" + comp.getXMLName() + "\"");
+        jClass.addAnnotation(xmlRootElementAnnotation);
+
+        JAnnotation xmlAccessoryTypeAnnotation = new JAnnotation( new JAnnotationType("javax.xml.bind.annotation.XmlAccessorType"));
+        xmlAccessoryTypeAnnotation.setValue("XmlAccessType.FIELD");
+        jClass.addImport("javax.xml.bind.annotation.XmlAccessType");
+        jClass.addAnnotation(xmlAccessoryTypeAnnotation);
 
         if (getConfig().useJava50()) {
             JAnnotation serial = new JAnnotation(new JAnnotationType("SuppressWarnings"));
